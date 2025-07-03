@@ -59,7 +59,12 @@
   border-radius: 8px;
   padding: 1rem;
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.projectCard:hover {
+  transform: scale(1.02);
 }
 
 .projectTitle {
@@ -98,8 +103,6 @@
   color: #999;
   font-size: 0.85rem;
 }
-
-/* page.module.css */
 
 .modalOverlay {
   position: fixed;
@@ -181,4 +184,53 @@
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
   font-size: 0.75rem;
+}
+
+.aboutSection {
+  margin-top: 3rem;
+  background: #fdfdfd;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #222;
+}
+
+.aboutSection h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.aboutContent p {
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.aboutContent a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.aboutContent a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.footer a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
