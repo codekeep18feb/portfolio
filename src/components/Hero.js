@@ -2,24 +2,21 @@
 
 import { useCallback } from "react";
 import Particles from "react-particles";
-import { Engine } from "tsparticles-engine";
 import styles from "./hero.module.css";
 
 export default function Hero() {
   const particlesInit = useCallback(async (engine) => {
-    // you can customize this engine or add presets if needed
-    console.log("Particles engine loaded", engine);
+    console.log("Particles loaded", engine);
   }, []);
 
   return (
-    <div className={styles.heroSection}>
+    <section className={styles.heroSection}>
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={{
-          background: {
-            color: { value: "#ffffff" }
-          },
+          fullScreen: { enable: false },
+          background: { color: { value: "#ffffff" } },
           fpsLimit: 60,
           interactivity: {
             events: {
@@ -27,19 +24,19 @@ export default function Hero() {
               resize: true
             },
             modes: {
-              repulse: { distance: 80, duration: 0.4 }
+              repulse: { distance: 100 }
             }
           },
           particles: {
-            number: { value: 40 },
+            number: { value: 35 },
             size: { value: 3 },
             move: { enable: true, speed: 1 },
-            opacity: { value: 0.4 },
+            opacity: { value: 0.3 },
             shape: { type: "circle" },
             links: {
               enable: true,
+              distance: 130,
               color: "#1976d2",
-              distance: 120,
               opacity: 0.4,
               width: 1
             }
@@ -54,6 +51,6 @@ export default function Hero() {
           🚀 Visit MagicChat.io
         </a>
       </div>
-    </div>
+    </section>
   );
 }
