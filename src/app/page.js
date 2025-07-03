@@ -4,6 +4,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
+import Hero from "@/components/Hero";
 
 const skillTags = [
   "React", "Next.js", "React Native", "JavaScript", "TypeScript",
@@ -73,6 +74,9 @@ export default function Home() {
 
   return (
     <motion.div className={styles.container} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+      
+      {/* <Hero /> */}
+
       <motion.h1 className={styles.title} initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>Deepak Singh – Sr. Frontend Developer (9+ yrs)</motion.h1>
 
       <motion.div className={styles.section} initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
@@ -149,6 +153,30 @@ export default function Home() {
           </motion.div>
         </motion.div>
       )}
+
+<div className={styles.aboutSection}>
+  <h2>👨‍💻 About Me</h2>
+  <p>
+    After nearly a decade of working with top-tier tech—building scalable apps and mentoring teams—I’ve taken the leap into solo entrepreneurship.
+    I founded <a href="https://magicchat.io" target="_blank" rel="noopener noreferrer">MagicChat.io</a>, a plug-and-play AI-powered chat & auth component provider for modern web apps.
+  </p>
+  <p>
+    Freelancing taught me resilience and business sense early on—I made over $1000 helping clients at $22/hr. Then I shifted to full-time roles, leading critical product initiatives. Now, I’m building products I believe in, betting on myself, and crafting tools that empower devs.
+  </p>
+  <p>
+    I value freedom, deep work, and building things that matter. I don’t like the 9–5 grind—and I’m glad to be writing my own rules now.
+  </p>
+</div>
+
+
+<div className={styles.footer}>
+  <p>📫 <strong>Email:</strong> <a href="mailto:deepaksingh.18feb@gmail.com">deepaksingh.18feb@gmail.com</a></p>
+  <p>📱 <strong>Phone:</strong> <a href="tel:+919354026963">+91 9354026963</a></p>
+  <p>💻 <strong>GitHub:</strong> <a href="https://github.com/codekeep18feb" target="_blank">github.com/codekeep18feb</a></p>
+</div>
+
+
+
     </motion.div>
   );
 }

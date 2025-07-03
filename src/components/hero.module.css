@@ -1,0 +1,41 @@
+.heroSection {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroText {
+  position: absolute;
+  text-align: center;
+  z-index: 10;
+  color: #111;
+}
+
+.heroText h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.heroText p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.heroText a {
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.heroText a:hover {
+  background-color: #0d47a1;
+}
