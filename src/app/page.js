@@ -1,5 +1,6 @@
+// src/app/page.js
 "use client"
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 
@@ -56,46 +57,251 @@ const projects = [
 ];
 
 export default function Home() {
-  const [activeTags, setActiveTags] = useState(skillTags);
+  const [activeTags, setActiveTags] = useState([]);
+  const [availableTags, setAvailableTags] = useState(skillTags);
+  const [inputValue, setInputValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isAddingTag, setIsAddingTag] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [editTag, setEditTag] = useState(null);
+  const [newTagValue, setNewTagValue] = useState("");
+  const inputRef = useRef(null);
+  const tagInputRef = useRef(null);
 
   const filteredProjects = useMemo(() => {
+    if (activeTags.length === 0) return projects;
     return projects.filter((project) =>
       project.tags.some((tag) => activeTags.includes(tag))
     );
   }, [activeTags]);
 
-  const removeTag = (tagToRemove) => {
-    setActiveTags((prev) => prev.filter((tag) => tag !== tagToRemove));
+  const filteredSuggestions = useMemo(() => {
+    if (!inputValue) return availableTags;
+    return availableTags.filter(tag => 
+      tag.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  }, [inputValue, availableTags]);
+
+  const addTag = (tag) => {
+    if (!activeTags.includes(tag)) {
+      setActiveTags(prev => [...prev, tag]);
+      setAvailableTags(prev => prev.filter(t => t !== tag));
+    }
+    setInputValue("");
+    setShowSuggestions(false);
   };
+
+  const removeTag = (tagToRemove) => {
+    setActiveTags(prev => prev.filter(tag => tag !== tagToRemove));
+    setAvailableTags(prev => [...prev, tagToRemove].sort());
+  };
+
+  const removeAllTags = () => {
+    setAvailableTags(prev => [...prev, ...activeTags].sort());
+    setActiveTags([]);
+    setInputValue("");
+    setShowSuggestions(false);
+  };
+
+  const handleCreateTag = () => {
+    if (inputValue.trim() && !availableTags.includes(inputValue.trim())) {
+      const newTag = inputValue.trim();
+      setAvailableTags(prev => [...prev, newTag].sort());
+      addTag(newTag);
+    }
+  };
+
+  const startEditTag = (tag, e) => {
+    e.stopPropagation();
+    setEditTag(tag);
+    setNewTagValue(tag);
+  };
+
+  const saveEditTag = (oldTag) => {
+    if (newTagValue.trim() && newTagValue.trim() !== oldTag) {
+      const newTag = newTagValue.trim();
+      
+      // Update active tags
+      setActiveTags(prev => 
+        prev.map(tag => tag === oldTag ? newTag : tag)
+      );
+      
+      // Update available tags
+      setAvailableTags(prev => 
+        prev.includes(oldTag) 
+          ? [...prev.filter(t => t !== oldTag), newTag].sort() 
+          : [...prev, newTag].sort()
+      );
+      
+      // Update projects
+      projects.forEach(project => {
+        if (project.tags.includes(oldTag)) {
+          project.tags = project.tags.map(t => t === oldTag ? newTag : t);
+        }
+      });
+    }
+    setEditTag(null);
+  };
+
+  const deleteTag = (tag) => {
+    // Remove from active tags
+    setActiveTags(prev => prev.filter(t => t !== tag));
+    
+    // Remove from available tags
+    setAvailableTags(prev => prev.filter(t => t !== tag));
+    
+    // Remove from projects
+    projects.forEach(project => {
+      project.tags = project.tags.filter(t => t !== tag);
+    });
+  };
+
+  useEffect(() => {
+    if (isAddingTag && tagInputRef.current) {
+      tagInputRef.current.focus();
+    }
+  }, [isAddingTag]);
 
   return (
     <motion.div className={styles.container} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
       <motion.h1 className={styles.title} initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>Deepak Singh – Sr. Frontend Developer (9+ yrs)</motion.h1>
 
       <motion.div className={styles.section} initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-        <h2 className={styles.heading}>Skills</h2>
-        <div className={styles.tagList}>
-          <AnimatePresence>
-            {activeTags.map((tag) => (
-              <motion.span
-                key={tag}
-                className={styles.tag}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.6, opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.heading}>Skills</h2>
+          <button 
+            className={styles.removeAllButton} 
+            onClick={removeAllTags}
+            disabled={activeTags.length === 0}
+          >
+            Remove All
+          </button>
+        </div>
+        
+        <div className={styles.tagSection}>
+          <div className={styles.tagList}>
+            <AnimatePresence>
+              {activeTags.map((tag) => (
+                <motion.span
+                  key={tag}
+                  className={styles.tag}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.6, opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {editTag === tag ? (
+                    <input
+                      type="text"
+                      value={newTagValue}
+                      onChange={(e) => setNewTagValue(e.target.value)}
+                      onBlur={() => saveEditTag(tag)}
+                      onKeyDown={(e) => e.key === 'Enter' && saveEditTag(tag)}
+                      className={styles.tagEditInput}
+                      autoFocus
+                    />
+                  ) : (
+                    <>
+                      {tag}
+                      <div className={styles.tagActions}>
+                        <button
+                          onClick={(e) => startEditTag(tag, e)}
+                          className={styles.tagActionButton}
+                          title="Edit tag"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => removeTag(tag)}
+                          className={styles.tagActionButton}
+                          title="Remove tag"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </motion.span>
+              ))}
+            </AnimatePresence>
+            
+            {!isAddingTag && (
+              <button 
+                className={styles.addTagButton}
+                onClick={() => setIsAddingTag(true)}
               >
-                {tag}
-                <button
-                  onClick={() => removeTag(tag)}
-                  className={styles.tagClose}
+                + Add Tag
+              </button>
+            )}
+            
+            {isAddingTag && (
+              <div className={styles.tagInputContainer}>
+                <input
+                  ref={tagInputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && inputValue.trim()) {
+                      if (filteredSuggestions.length > 0) {
+                        addTag(filteredSuggestions[0]);
+                      } else {
+                        handleCreateTag();
+                      }
+                    } else if (e.key === 'Escape') {
+                      setIsAddingTag(false);
+                      setInputValue("");
+                      setShowSuggestions(false);
+                    }
+                  }}
+                  placeholder="Type to search or create..."
+                  className={styles.tagInput}
+                />
+                
+                {showSuggestions && filteredSuggestions.length > 0 && (
+                  <motion.div 
+                    className={styles.suggestionsList}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    {filteredSuggestions.map(tag => (
+                      <div 
+                        key={tag} 
+                        className={styles.suggestionItem}
+                        onMouseDown={() => addTag(tag)}
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+                
+                {inputValue.trim() && !availableTags.includes(inputValue.trim()) && (
+                  <motion.div 
+                    className={styles.createTagPrompt}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    Press Enter to create new tag: 
+                    <span className={styles.newTagPreview}>{inputValue.trim()}</span>
+                  </motion.div>
+                )}
+                
+                <button 
+                  className={styles.closeAddButton}
+                  onClick={() => {
+                    setIsAddingTag(false);
+                    setInputValue("");
+                    setShowSuggestions(false);
+                  }}
                 >
                   ×
                 </button>
-              </motion.span>
-            ))}
-          </AnimatePresence>
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
 
