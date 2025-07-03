@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import Particles from "react-particles";
+import Particles from "@tsparticles/react";
+
 import styles from "./hero.module.css";
 
 export default function Hero() {
