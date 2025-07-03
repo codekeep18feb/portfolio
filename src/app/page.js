@@ -1,5 +1,6 @@
 "use client"
 import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 
 const skillTags = [
@@ -62,46 +63,66 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Deepak Singh – Sr. Frontend Developer (9+ yrs)</h1>
+    <motion.div className={styles.container} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+      <motion.h1 className={styles.title} initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>Deepak Singh – Sr. Frontend Developer (9+ yrs)</motion.h1>
 
-      <div className={styles.section}>
+      <motion.div className={styles.section} initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
         <h2 className={styles.heading}>Skills</h2>
         <div className={styles.tagList}>
-          {activeTags.map((tag) => (
-            <span key={tag} className={styles.tag}>
-              {tag}
-              <button
-                onClick={() => removeTag(tag)}
-                className={styles.tagClose}
+          <AnimatePresence>
+            {activeTags.map((tag) => (
+              <motion.span
+                key={tag}
+                className={styles.tag}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.6, opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
               >
-                ×
-              </button>
-            </span>
-          ))}
+                {tag}
+                <button
+                  onClick={() => removeTag(tag)}
+                  className={styles.tagClose}
+                >
+                  ×
+                </button>
+              </motion.span>
+            ))}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
-      <div className={styles.section}>
+      <motion.div className={styles.section} initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
         <h2 className={styles.heading}>Projects ({filteredProjects.length})</h2>
         <div className={styles.projectList}>
-          {filteredProjects.map((project, idx) => (
-            <div key={idx} className={styles.projectCard}>
-              <h3 className={styles.projectTitle}>{project.title}</h3>
-              <p className={styles.projectDuration}>{project.duration}</p>
-              <p className={styles.projectDesc}>{project.desc}</p>
-              <div className={styles.projectTags}>
-                {project.tags.map((tag) => (
-                  <span key={tag} className={styles.projectTag}>{tag}</span>
-                ))}
-              </div>
-            </div>
-          ))}
+          <AnimatePresence>
+            {filteredProjects.map((project, idx) => (
+              <motion.div
+                key={project.title}
+                className={styles.projectCard}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3, delay: idx * 0.1 }}
+              >
+                <h3 className={styles.projectTitle}>{project.title}</h3>
+                <p className={styles.projectDuration}>{project.duration}</p>
+                <p className={styles.projectDesc}>{project.desc}</p>
+                <div className={styles.projectTags}>
+                  {project.tags.map((tag) => (
+                    <span key={tag} className={styles.projectTag}>{tag}</span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
           {filteredProjects.length === 0 && (
-            <p className={styles.noProjects}>No projects match selected skills.</p>
+            <motion.p className={styles.noProjects} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              No projects match selected skills.
+            </motion.p>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
