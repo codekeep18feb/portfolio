@@ -1,7 +1,7 @@
 "use client";
 // src/app/layout.js
 
-import "./globals.css";
+// import "./globals.css";
 import { useState } from 'react';
 
 
