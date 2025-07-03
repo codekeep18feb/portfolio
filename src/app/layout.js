@@ -3,22 +3,12 @@
 
 import "./globals.css";
 import { useState } from 'react';
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Modal from "./components/Modal";
+
 
 export default function RootLayout({ children}) {
   const [modalContent, setModalContent] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
-  const onLinkHover = (content) => {
-    setModalContent(content);
-    setModalVisible(true);
-  };
-
-  const onNavLeave = () => {
-    // setModalVisible(false);
- };
 
   const closeModal = () => setModalVisible(false);
   return (
@@ -40,19 +30,8 @@ export default function RootLayout({ children}) {
         />
       </head>
       <body>
-        <Header onLinkHover={onLinkHover} onNavLeave={onNavLeave} />
         {children}
-        <Modal
-          content={
-            <div>
-              <p>{modalContent}</p>
-              {/* <button onClick={() => alert("Button clicked!")}>Click Me</button> */}
-            </div>
-          }
-          visible={modalVisible}
-          onClose={closeModal}
-        />
-        {/* <Footer /> */}
+      
       </body>
     </html>
   );

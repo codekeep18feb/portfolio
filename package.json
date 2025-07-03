@@ -1,8 +1,8 @@
 {
-  "name": "chathead-landing-next",
+  "name": "portfolio",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://codekeep18feb.github.io/chathead-landing-next",
+  "homepage": "https://codekeep18feb.github.io/portfolio",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
